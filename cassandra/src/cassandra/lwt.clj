@@ -132,7 +132,7 @@
                           :generator (gen/phases
                                       (->> [r w cas cas cas]
                                            gen/mix
-                                           (gen/stagger 2/10)
+                                           (gen/stagger 1/5)
                                            (gen/delay 2)
                                            (gen/nemesis
                                             (gen/seq (cycle
@@ -147,7 +147,7 @@
                                             (gen/seq (cycle
                                                       [(gen/sleep 4)
                                                        {:type :info :f :decommission}])))
-                                           (gen/time-limit 30))
+                                           (gen/time-limit 20))
                                       (->> gen/void
                                            (gen/conductor
                                             :bootstrapper
