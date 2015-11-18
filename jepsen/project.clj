@@ -11,6 +11,7 @@
                  [org.clojars.achim/multiset "0.1.0"]
                  [fipp "0.6.2"]
                  [byte-streams "0.1.4"]]
+  :aot [knossos.core #"jepsen\..*"]
   :jvm-opts ["-Xmx32g" "-XX:+UseConcMarkSweepGC" "-XX:+UseParNewGC"
              "-XX:+CMSParallelRemarkEnabled" "-XX:+AggressiveOpts"
              "-XX:+UseFastAccessorMethods" "-server"])
