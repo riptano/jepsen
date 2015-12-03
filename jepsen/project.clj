@@ -1,4 +1,4 @@
-(defproject org.clojars.jkni/jepsen "0.0.7.1"
+(defproject org.clojars.jkni/jepsen "0.0.7-SNAPSHOT"
   :description "Non-canonical, possibly temporary fork of aphyr/jepsen. Experiments with a few features. Unless you know you want this, you want upstream!"
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [org.clojure/data.fressian "0.2.0"]
