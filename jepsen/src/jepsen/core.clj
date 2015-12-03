@@ -387,6 +387,7 @@
                                      (CyclicBarrier. (count (:nodes test)))
                                      ::no-barrier))
                         ; Currently running histories
+
                         :active-histories (atom #{}))]
 
         ; Open SSH conns
@@ -401,7 +402,6 @@
                             (map vector (:nodes test))
                             (into {})
                             (assoc test :sessions))]
-
               ; Setup
               (with-os test
                 (with-db test
@@ -423,6 +423,7 @@
                           (when (:name test) (store/save! test))
 
                           (info "Analyzing")
+                          (info (:history test))
                           (let [test (assoc test :results (checker/check-safe
                                                             (:checker test)
                                                             test

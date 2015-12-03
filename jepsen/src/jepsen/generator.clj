@@ -273,13 +273,15 @@
     (reify Generator
       (op [_ test process]
         (when (not= :clear @state)
+          (info *threads*)
           ; Ensure a barrier exists
           (compare-and-set! state :fresh
                             (CyclicBarrier. (count *threads*)
                                             (partial reset! state :clear)))
 
           ; Block on barrier
-          (.await ^CyclicBarrier @state))
+          (.await ^CyclicBarrier @state)
+          (info "out of synchronize wait"))
         (op gen test process)))))
 
 (defn phases
