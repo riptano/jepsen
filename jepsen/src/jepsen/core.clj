@@ -197,9 +197,6 @@
                 (let [completion (-> (client/invoke! client test op)
                                      (assoc :time (relative-time-nanos)))]
                   (util/log-op completion)
-
-                                        ; Conductor workers are not allowed to affect the model
-                  (assert (= (:type op)    :info))
                   (assert (= (:f op)       (:f completion)))
                   (assert (= (:process op) (:process completion)))
 
