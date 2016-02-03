@@ -66,7 +66,7 @@
 ;(defn all-loggers []
 ;  (->> (org.apache.log4j.LogManager/getCurrentLoggers)
 ;       (java.util.Collections/list)
-;       (cons (org.apache.log4j.LogManager/getRootLogger)))) 
+;       (cons (org.apache.log4j.LogManager/getRootLogger))))
 
 (defn all-jdk-loggers []
   (let [manager (java.util.logging.LogManager/getLogManager)]
@@ -327,3 +327,33 @@
                              (count (longest-common-prefix cs))
                              (map (comp dec count) cs)))
        cs))
+
+(defn- identical?-seq-new
+  "Finds new items in seq b that aren't identical? to any in a"
+  [a b]
+  (filter #(not-any? (partial identical? %) a) b))
+
+(defn- checked-watch-add
+  "Checked add-watch with backfilling"
+  [watched key watcher-fn]
+  (let [preparing (atom true)
+        before @watched
+        delta (atom nil)]
+    (add-watch watched key
+               (fn [k r o n]
+                 (while @preparing
+                   (Thread/sleep 1000))
+                 (doseq [new (identical?-seq-new o n)]
+                   (when-not (some (partial identical? new) @delta)
+                     (watcher-fn new)))))
+    (let [after @watched]
+      (reset! delta (set (identical?-seq-new before after)))
+      (doseq [item after]
+        (watcher-fn item))
+      (reset! preparing false))))
+
+(defn add-history-callback
+  [test key ^java.util.function.Consumer callback]
+  (checked-watch-add (get test :active-histories)
+                     (keyword (str (name :add-callbacks) \- (name key)))
+                     #(checked-watch-add % key (fn [op] (.accept callback op)))))
